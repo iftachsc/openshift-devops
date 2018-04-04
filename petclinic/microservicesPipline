@@ -1,0 +1,46 @@
+       node {
+           // define commands
+           def scmHost = '104.199.69.19'
+           def devEnv = 'dev'
+           def stageEnv = 'staging'
+           def appName = 'host-id'
+
+           stage ('Git Checkout') {
+             git branch: 'master', url: "http://${scmHost}/root/hostid.git"
+             sh 'git config --global user.email "iftachsc@innercloud.io"'
+           }
+           stage ('Test') {
+             sh 'npm  test'
+           }
+           stage ('Openshift Build') {
+             sh "oc start-build hostidapp --wait=true -n ${devEnv}"
+           }
+           stage ('Deploy DEV') {
+             sh "oc rollout latest ${host-id} -n ${devEnv}"
+           }
+           stage ('Deploy STAGE') {
+             timeout(time:15, unit:'MINUTES') {
+                input message: "Promote to STAGING?", ok: "Promote to Staging env"
+             }
+             try{
+               //def v = version()
+               // promote image
+               sh "oc tag ${devEnv}/${appName}":latest ${stageEnv}/${appName}:staging"
+               sh "oc tag shalom/hostidapp:latest shalom-stage/hostidapp:latest"
+             
+               // deploy stage image
+               sh "oc rollout staging ${appName} -n ${stageEnv}"
+             }
+             catch(Exception ex) {
+               println('Something went wrong')
+             }  
+           }
+           stage('Send Notifications'){
+             //email(receipeints: CommiterProvider);
+             sleep 5
+           }
+        }
+
+        def version() {
+          return sh(returnStdout: true, script: 'npm version preminor').trim()
+        }
