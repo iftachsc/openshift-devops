@@ -1,21 +1,39 @@
 
-def  microservices = ["vet-service", "visit-service", "customer-service"]
-
-node{
+	def  microservices = ["vet-service", "visit-service", "customer-service"]
+	println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
+	node{
 	
-	def selector = openshift.selector("bc", "petclinic-microservices-pipeline")
-	def builds
-	//selector.object()
-	builds = selector.related( "builds" )
-	println builds
 	
-	def scmVars = checkout scm
+	//def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
 	
-	openshift.newProject( 'test' )
-	openshift.deleteProject( 'test' )
-	//println builds[0].object().status.phase
-
+	openshift.withCluster() {
+		openshift.withProject('cicd') {
+			def reg = ~/^jenkins-cicd-/   
+			def currentBuild = env.BUILD_TAG - reg
+			def selector = openshift.selector("build", currentBuild)
+			selector.describe()
+			
+			def build = selector.object()
+			println build.status.phase
+			println build.spec.triggeredBy[0].githubWebHook.revision.git.commit
+			println build.spec.triggeredBy[0].githubWebHook.revision.git.committer.name
+			//def = builds = buildConfig.related( "builds" )
+			
+			def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+			sh("git branch --contains ${build.spec.triggeredBy[0].githubWebHook.revision.git.committer.name}")
+			sh('oc whoami')
+			
+			println('-------------')
+			//def scmVars = checkout scm
+			sh('ls')
+			
+			//openshift.newProject("integ-${scmVars.GIT_COMMIT}","--display-name", projectDisplayName)
+			
+			println builds
+		}
+	}
 }
+
 //node('maven') {
 //   
 //   def scmHost = '104.199.69.19'
