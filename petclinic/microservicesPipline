@@ -11,6 +11,7 @@ node('maven') {
    def appName = 'host-id'
    
    stage('Git checkout') {
+	 step([$class: 'WsCleanup'])
      println payload
 	 sh('env')
      //checkout([$class: "GitSCM", branches: [[name: "*/${nationalParksBranch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: "RelativeTargetDirectory", relativeTargetDir: "nationalparks"]], submoduleCfg: [], userRemoteConfigs: [[url: "${nationalParksURL}"]]])
