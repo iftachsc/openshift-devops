@@ -1,15 +1,18 @@
 
-
+def  microservices = ["vet-service", "visit-service", "customer-service"]
 
 node{
 	
-	
-
 	def selector = openshift.selector("bc", "petclinic-microservices-pipeline")
 	def builds
 	//selector.object()
 	builds = selector.related( "builds" )
 	println builds
+	
+	def scmVars = checkout scm
+	
+	openshift.newProject( 'test' )
+	openshift.deleteProject( 'test' )
 	//println builds[0].object().status.phase
 
 }
