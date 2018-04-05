@@ -4,7 +4,7 @@ def microservicesGitBaseUrl = ''
 def currentMicroservice = "${NATIONALPARKS_GIT_URI}"
 
 
-node {
+node('maven') {
    
    def scmHost = '104.199.69.19'
    def devEnv = 'dev'
