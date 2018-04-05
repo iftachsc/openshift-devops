@@ -11,7 +11,7 @@ node('maven') {
    def appName = 'host-id'
    
    stage('Git checkout') {
-         println scm.getUserRemoteConfigs()[0].getUrl()
+     println payload
 	 sh('env')
      //checkout([$class: "GitSCM", branches: [[name: "*/${nationalParksBranch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: "RelativeTargetDirectory", relativeTargetDir: "nationalparks"]], submoduleCfg: [], userRemoteConfigs: [[url: "${nationalParksURL}"]]])
      
