@@ -1,7 +1,7 @@
 
 
 def microservicesGitBaseUrl = ''
-def currentMicroservice = "${PAYLOAD}"
+//def currentMicroservice = "${PAYLOAD}"
 
 
 node('maven') {
