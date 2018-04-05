@@ -59,7 +59,7 @@ println builds[0].object().status.phase
 //     //email(receipeints: CommiterProvider);
 //     sleep 5
 //   }
-}
+//}
 
 def version() {
   return sh(returnStdout: true, script: 'npm version preminor').trim()
