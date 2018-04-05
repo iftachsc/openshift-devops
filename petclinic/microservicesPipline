@@ -1,5 +1,6 @@
 
 
+step([$class: 'WsCleanup'])
 
 def selector = openshift.selector("bc", "petclinic-microservices-pipeline")
 def builds
