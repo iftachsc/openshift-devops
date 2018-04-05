@@ -7,10 +7,10 @@ node{
 
 	def selector = openshift.selector("bc", "petclinic-microservices-pipeline")
 	def builds
-
-	selector.object()
+	//selector.object()
 	builds = selector.related( "builds" )
-	println builds[0].object().status.phase
+	println builds
+	//println builds[0].object().status.phase
 
 }
 //node('maven') {
