@@ -1,15 +1,18 @@
 
 
-step([$class: 'WsCleanup'])
 
-def selector = openshift.selector("bc", "petclinic-microservices-pipeline")
-def builds
+node{
+	
+	step([$class: 'WsCleanup'])
 
-selector.object()
-builds = selector.related( "builds" )
-println builds[0].object().status.phase
+	def selector = openshift.selector("bc", "petclinic-microservices-pipeline")
+	def builds
 
+	selector.object()
+	builds = selector.related( "builds" )
+	println builds[0].object().status.phase
 
+}
 //node('maven') {
 //   
 //   def scmHost = '104.199.69.19'
